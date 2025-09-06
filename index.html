@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scriere Creativă pentru Copii</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF6B6B">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .title {
+            font-size: 3.5em;
+            color: #fff;
+            text-shadow: 3px 3px 0px #333, 6px 6px 10px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { color: #FF6B6B; }
+            16% { color: #4ECDC4; }
+            33% { color: #45B7D1; }
+            50% { color: #96CEB4; }
+            66% { color: #FFEAA7; }
+            83% { color: #FD79A8; }
+            100% { color: #FF6B6B; }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #333;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .content-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideInUp 0.8s ease-out;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .story-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .answer-btn {
+            background: #4ECDC4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .answer-btn:hover {
+            background: #45B7D1;
+            transform: scale(1.05);
+        }
+
+        .answer-btn.correct {
+            background: #00b894;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .answer-btn.incorrect {
+            background: #e17055;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .creative-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 20px;
+            border: 3px solid #4ECDC4;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-family: 'Comic Sans MS', cursive;
+            resize: vertical;
+            background: linear-gradient(45deg, #fff, #f8f9fa);
+        }
+
+        .creative-input:focus {
+            outline: none;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-star {
+            position: absolute;
+            color: #FFD93D;
+            font-size: 2em;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .back-btn {
+            background: #e17055;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #d63031;
+            transform: scale(1.05);
+        }
+
+        .score-display {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5em;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 80%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-star" style="top: 10%; left: 10%; animation-delay: 0s;">⭐</div>
+        <div class="floating-star" style="top: 20%; right: 15%; animation-delay: 1s;">🌟</div>
+        <div class="floating-star" style="top: 60%; left: 5%; animation-delay: 2s;">✨</div>
+        <div class="floating-star" style="top: 70%; right: 10%; animation-delay: 3s;">💫</div>
+        <div class="floating-star" style="top: 40%; left: 80%; animation-delay: 4s;">⭐</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Scriere Creativă</h1>
+            <p class="subtitle">🎨 Aventuri cu Codiță Cățelul Scriitor 🐕</p>
+        </div>
+
+        <div id="main-menu" class="content-section active">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showSection('story')">📖 Povestea lui Codiță</button>
+                <button class="nav-btn" onclick="showSection('quiz1')">✅ Adevărat sau Fals</button>
+                <button class="nav-btn" onclick="showSection('quiz2')">🎲 Ce e inventat?</button>
+                <button class="nav-btn" onclick="showSection('quiz3')">✨ Dacă aș fi o poveste</button>
+                <button class="nav-btn" onclick="showSection('creative')">🎉 Inventează un obiect</button>
+            </div>
+            <div class="score-display">
+                Scorul tău: <span id="total-score">0</span> puncte 🏆
+            </div>
+        </div>
+
+        <div id="story" class="content-section">
+            <button class="back-btn" onclick="showSection('main-menu')">🏠 Înapoi la meniu</button>
+            <h2 style="color: #FF6B6B; text-align: center; margin-bottom: 20px;">📖 Scrisoarea cățelului poet</h2>
+            <div class="story-box">
+                <p>Într-o dimineață de vară, Codiță, un cățel curios cu ochelari rotunzi și coadă mereu zburlită, a decis că vrea să devină... scriitor creativ.</p>
+                <br>
+                <p>„Gata cu rosul pantofilor și lătratul la bicicliști! Eu scriu cărți!", a lătrat el, sărind pe tastatura laptopului stăpânei sale, o profesoară de limba română.</p>
+                <br>
+                <p>A început să scrie o poveste despre un os magic care putea vorbi. Osul se numea Osi și avea accent franțuzesc:</p>
+                <br>
+                <p>— Bonjour, Codiță! Dacă vrei să devii scriitor, trebuie să înveți scrierea creativă!</p>
+                <p>— Ce-i aia scriere creativă? A întrebat cățelul.</p>
+                <p>— E atunci când folosești imaginația ca să creezi personaje, întâmplări și lumi care nu există în realitate. Nu e despre compuneri plictisitoare, e despre magie, râsete și fantezie!</p>
+                <br>
+                <p>Codiță a scris o poveste despre un câine astronaut, un motan pianist și o pisică șefă de mafie literară. Când a terminat, a trimis povestea prin email... dar a încurcat adresa și a trimis-o chiar la... președintele țării!</p>
+                <br>
+                <p>Două zile mai târziu, Codiță a primit o scrisoare oficială:</p>
+                <p>„Dragă domnule Codiță, felicitări! Povestea ta ne-a făcut să râdem cu lacrimi. Am decis ca toți câinii din țară să învețe scriere creativă în școli. Mulțumim!"</p>
+                <br>
+                <p>Codiță a lătrat de bucurie, apoi a sărit direct într-o baltă. Asta nu avea legătură cu scrierea creativă. Pur și simplu îi plăceau bălțile.</p>
+            </div>
+        </div>
+
+        <div id="quiz1" class="content-section">
+            <button class="back-btn" onclick="showSection('main-menu')">🏠 Înapoi la meniu</button>
+            <h2 style="color: #FF6B6B; text-align: center; margin-bottom: 20px;">✅ Adevărat sau Fals</h2>
+            <div id="quiz1-questions"></div>
+            <div class="score-display">
+                Scorul pentru acest quiz: <span id="quiz1-score">0</span>/5 puncte
+            </div>
+        </div>
+
+        <div id="quiz2" class="content-section">
+            <button class="back-btn" onclick="showSection('main-menu')">🏠 Înapoi la meniu</button>
+            <h2 style="color: #FF6B6B; text-align: center; margin-bottom: 20px;">🎲 Care dintre ele e inventată?</h2>
+            <div id="quiz2-questions"></div>
+            <div class="score-display">
+                Scorul pentru acest quiz: <span id="quiz2-score">0</span>/3 puncte
+            </div>
+        </div>
+
+        <div id="quiz3" class="content-section">
+            <button class="back-btn" onclick="showSection('main-menu')">🏠 Înapoi la meniu</button>
+            <h2 style="color: #FF6B6B; text-align: center; margin-bottom: 20px;">✨ Dacă aș fi o poveste...</h2>
+            <div id="quiz3-questions"></div>
+            <div class="score-display">
+                Scorul pentru acest quiz: <span id="quiz3-score">0</span>/5 puncte
+            </div>
+        </div>
+
+        <div id="creative" class="content-section">
+            <button class="back-btn" onclick="showSection('main-menu')">🏠 Înapoi la meniu</button>
+            <h2 style="color: #FF6B6B; text-align: center; margin-bottom: 20px;">🎉 Inventează un obiect care nu există!</h2>
+            <p style="font-size: 1.2em; text-align: center; margin-bottom: 20px;">Scrie 3-4 rânduri despre cum se folosește:</p>
+            <textarea class="creative-input" placeholder="Exemplu: Am inventat o umbrelă care spune glume! Când o deschizi când plouă, ea începe să spună bancuri ca să te facă să râzi și să uiți că te uzi. Are un buton special pentru glume cu animale și unul pentru glume cu mâncare..."></textarea>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="nav-btn" onclick="saveCreativeText()">💾 Salvează creația ta</button>
+                <button class="nav-btn" onclick="clearCreativeText()">🗑️ Șterge și începe din nou</button>
+            </div>
+            <div id="creative-saved" style="display: none; background: #00b894; color: white; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                ✅ Creația ta a fost salvată! Ești un scriitor creativ minunat! 🌟
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let scores = {
+            quiz1: 0,
+            quiz2: 0,
+            quiz3: 0
+        };
+
+        const quiz1Data = [
+            { question: "Codiță voia să devină bucătar.", answer: false },
+            { question: "Scrierea creativă presupune folosirea imaginației.", answer: true },
+            { question: "Osul magic din poveste avea accent italian.", answer: false },
+            { question: "Povestea scrisă de Codiță a ajuns la președintele țării.", answer: true },
+            { question: "Scrierea creativă este doar despre fapte reale și istorice.", answer: false }
+        ];
+
+        const quiz2Data = [
+            {
+                question: "Care dintre aceste lucruri nu există în realitate?",
+                options: ["Căței care latră în franceză la miezul nopții", "O umbrelă care spune glume când o deschizi", "Un robot care dansează în fabrici"],
+                correct: 1
+            },
+            {
+                question: "Care dintre aceste lucruri e complet inventat?",
+                options: ["Pești care zboară în Amazon", "Pinguini care cântă rap în fiecare joi", "Broaște țestoase gigantice din Galápagos"],
+                correct: 1
+            },
+            {
+                question: "Ce nu e real, dar ar fi super amuzant?",
+                options: ["Un frigider care te ceartă dacă mănânci prea mult tort", "O pasăre care imită zgomotul de alarmă de mașină", "Un urs panda care se rostogolește pentru joacă"],
+                correct: 0
+            }
+        ];
+
+        const quiz3Data = [
+            {
+                question: "Ce fel de poveste ai fi?",
+                options: ["Aventură în spațiu", "Poveste cu animale vorbitoare", "Poveste magică cu un obiect fermecat"],
+                correct: 2
+            },
+            {
+                question: "Cine ești în această poveste?",
+                options: ["O umbrelă care zboară și știe secrete", "Un creion magic ce prinde viață și desenează realitatea", "Un ceas care poate merge înapoi doar dacă dansezi"],
+                correct: 1
+            },
+            {
+                question: "Ce se întâmplă într-o zi obișnuită?",
+                options: ["Cineva te folosește să deseneze o pizza, iar pizza prinde viață și fuge", "Desenezi din greșeală o ușă pe perete și ea se deschide spre o altă lume", "Începi să desenezi un dragon, dar el se plictisește și pleacă în vacanță"],
+                correct: 1
+            },
+            {
+                question: "Cine te urmează în acea lume?",
+                options: ["O găină detectiv", "Un băiat pe nume Alex și pisica lui vorbitoare, Mustăcel", "Un nor care plânge ciocolată caldă"],
+                correct: 1
+            },
+            {
+                question: "Ce e scris pe peretele din acea lume?",
+                options: ["Nu uita să-ți încarci creionul magic!", "Imaginația ta este cheia spre orice final vrei!", "Această lume se închide la ora 5, poftiți afară!"],
+                correct: 1
+            }
+        ];
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'quiz1') loadQuiz1();
+            if (sectionId === 'quiz2') loadQuiz2();
+            if (sectionId === 'quiz3') loadQuiz3();
+        }
+
+        function loadQuiz1() {
+            const container = document.getElementById('quiz1-questions');
+            container.innerHTML = '';
+            
+            quiz1Data.forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-box';
+                questionDiv.innerHTML = `
+                    <p style="margin-bottom: 15px; font-size: 1.2em;">${index + 1}. ${item.question}</p>
+                    <button class="answer-btn" onclick="answerQuiz1(${index}, true)">Adevărat</button>
+                    <button class="answer-btn" onclick="answerQuiz1(${index}, false)">Fals</button>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function loadQuiz2() {
+            const container = document.getElementById('quiz2-questions');
+            container.innerHTML = '';
+            
+            quiz2Data.forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-box';
+                questionDiv.innerHTML = `
+                    <p style="margin-bottom: 15px; font-size: 1.2em;">${index + 1}. ${item.question}</p>
+                    ${item.options.map((option, optIndex) => 
+                        `<button class="answer-btn" onclick="answerQuiz2(${index}, ${optIndex})">${String.fromCharCode(65 + optIndex)}) ${option}</button>`
+                    ).join('')}
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function loadQuiz3() {
+            const container = document.getElementById('quiz3-questions');
+            container.innerHTML = '';
+            
+            quiz3Data.forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-box';
+                questionDiv.innerHTML = `
+                    <p style="margin-bottom: 15px; font-size: 1.2em;">${index + 1}. ${item.question}</p>
+                    ${item.options.map((option, optIndex) => 
+                        `<button class="answer-btn" onclick="answerQuiz3(${index}, ${optIndex})">${String.fromCharCode(65 + optIndex)}) ${option}</button>`
+                    ).join('')}
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function answerQuiz1(questionIndex, answer) {
+            const correct = quiz1Data[questionIndex].answer === answer;
+            const buttons = document.querySelectorAll(`#quiz1-questions .question-box:nth-child(${questionIndex + 1}) .answer-btn`);
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if ((btn.textContent === 'Adevărat' && answer === true) || (btn.textContent === 'Fals' && answer === false)) {
+                    btn.className = correct ? 'answer-btn correct' : 'answer-btn incorrect';
+                }
+            });
+            
+            if (correct) {
+                scores.quiz1++;
+                document.getElementById('quiz1-score').textContent = scores.quiz1;
+            }
+            
+            updateTotalScore();
+        }
+
+        function answerQuiz2(questionIndex, answerIndex) {
+            const correct = quiz2Data[questionIndex].correct === answerIndex;
+            const buttons = document.querySelectorAll(`#quiz2-questions .question-box:nth-child(${questionIndex + 1}) .answer-btn`);
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === answerIndex) {
+                    btn.className = correct ? 'answer-btn correct' : 'answer-btn incorrect';
+                }
+            });
+            
+            if (correct) {
+                scores.quiz2++;
+                document.getElementById('quiz2-score').textContent = scores.quiz2;
+            }
+            
+            updateTotalScore();
+        }
+
+        function answerQuiz3(questionIndex, answerIndex) {
+            const correct = quiz3Data[questionIndex].correct === answerIndex;
+            const buttons = document.querySelectorAll(`#quiz3-questions .question-box:nth-child(${questionIndex + 1}) .answer-btn`);
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === answerIndex) {
+                    btn.className = correct ? 'answer-btn correct' : 'answer-btn incorrect';
+                }
+            });
+            
+            if (correct) {
+                scores.quiz3++;
+                document.getElementById('quiz3-score').textContent = scores.quiz3;
+            }
+            
+            updateTotalScore();
+        }
+
+        function updateTotalScore() {
+            const total = scores.quiz1 + scores.quiz2 + scores.quiz3;
+            document.getElementById('total-score').textContent = total;
+        }
+
+        function saveCreativeText() {
+            const text = document.querySelector('.creative-input').value;
+            if (text.trim()) {
+                localStorage.setItem('creativeText', text);
+                document.getElementById('creative-saved').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('creative-saved').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function clearCreativeText() {
+            document.querySelector('.creative-input').value = '';
+            localStorage.removeItem('creativeText');
+        }
+
+        // Load saved creative text
+        window.addEventListener('load', () => {
+            const savedText = localStorage.getItem('creativeText');
+            if (savedText) {
+                document.querySelector('.creative-input').value = savedText;
+            }
+            
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            }
+        });
+    </script>
+</body>
+</html>
+
