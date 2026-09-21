@@ -35,11 +35,13 @@ for (const lesson of lessons) {
 }
 
 function refreshQr() {
-  const url = lessonUrl(Number(qrSelect.value));
+  const lessonId = Number(qrSelect.value);
+  const url = lessonUrl(lessonId);
   qrUrl.textContent = url;
   qrOpen.href = url;
-  // The image is only a printing aid; the lesson itself remains fully offline after installation.
-  qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&margin=8&data=${encodeURIComponent(url)}`;
+  // PNG-urile au fost generate prin QR Server API și sunt păstrate local în GitHub Pages.
+  // Astfel, codul tipărit este static și nu depinde de API după publicare.
+  qrImage.src = new URL(`qr-codes/lectia-${lessonId}.png`, base).href;
 }
 qrSelect.addEventListener("change", refreshQr);
 refreshQr();
@@ -57,4 +59,3 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
-

@@ -1,6 +1,5 @@
-const CACHE = "atelier-povesti-shell-v1";
-const CORE = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.json", "./icon.svg"];
+const CACHE = "atelier-povesti-shell-v2";
+const CORE = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.json", "./icon.svg", "./qr-codes/", "./qr-codes/index.html", "./qr-codes/qr.css", "./qr-codes/lansator.png", "./qr-codes/lectia-1.png", "./qr-codes/lectia-2.png", "./qr-codes/lectia-3.png", "./qr-codes/lectia-4.png", "./qr-codes/lectia-5.png", "./qr-codes/lectia-6.png", "./qr-codes/lectia-7.png", "./qr-codes/lectia-8.png"];
 self.addEventListener("install", (event) => { event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (event) => { event.waitUntil(self.clients.claim()); });
 self.addEventListener("fetch", (event) => { if (event.request.method !== "GET") return; event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => { const copy = response.clone(); caches.open(CACHE).then((cache) => cache.put(event.request, copy)); return response; }).catch(() => caches.match("./index.html")))); });
-

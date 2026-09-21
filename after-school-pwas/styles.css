@@ -53,6 +53,8 @@ h2 { margin-bottom: 8px; font-size: clamp(1.35rem, 2.6vw, 2rem); line-height: 1.
 .select-label { display: block; margin: 16px 0 6px; font-weight: 850; }
 .lesson-select { min-height: 50px; width: min(100%, 320px); padding: 10px 14px; border: 2px solid var(--line); border-radius: 14px; background: white; color: var(--ink); }
 .qr-url { max-width: 560px; margin: 12px 0 0; color: var(--ink-soft); font-size: .85rem; overflow-wrap: anywhere; }
+.qr-all-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 12px; padding: 9px 13px; border-radius: 12px; color: #315fd4; background: #eef2fb; font-weight: 850; text-decoration: none; }
+.qr-all-link:hover { background: #e3e9fb; }
 .qr-preview { display: grid; place-items: center; gap: 9px; min-width: 210px; padding: 18px; border-radius: 20px; background: white; border: 2px solid var(--line); }
 .qr-preview img { display: block; border-radius: 8px; image-rendering: pixelated; }
 .text-link { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 14px; border-radius: 12px; color: #315fd4; font-weight: 850; }
@@ -61,4 +63,3 @@ h2 { margin-bottom: 8px; font-size: clamp(1.35rem, 2.6vw, 2rem); line-height: 1.
 @media (max-width: 900px) { .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .site-header { grid-template-columns: auto 1fr; } .install-button { grid-column: 2; justify-self: start; } }
 @media (max-width: 620px) { .site-header, main, .site-footer { width: min(100% - 20px, 1160px); } .site-header { padding-top: 20px; } .brand-mark { width: 52px; height: 52px; border-radius: 17px; } .quick-start, .qr-panel { align-items: stretch; flex-direction: column; padding: 18px; } .quick-actions { justify-content: flex-start; } .lesson-grid { grid-template-columns: 1fr; gap: 12px; } .lesson-card { min-height: 210px; } .qr-preview { align-self: center; } .site-footer { flex-direction: column; gap: 4px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
-
