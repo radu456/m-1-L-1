@@ -1,0 +1,64 @@
+:root {
+  color-scheme: light;
+  --ink: #13233a;
+  --ink-soft: #536178;
+  --cream: #fff9f0;
+  --paper: #ffffff;
+  --sun: #ffd166;
+  --coral: #ef6f6c;
+  --mint: #7bdcb5;
+  --lilac: #9b8cff;
+  --line: rgba(19, 35, 58, 0.12);
+  --shadow: 0 18px 40px rgba(19, 35, 58, 0.11);
+  font-family: "Nunito", "Trebuchet MS", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--cream); }
+body { margin: 0; color: var(--ink); background: radial-gradient(circle at 8% 2%, #ffe7af 0 18%, transparent 40%), radial-gradient(circle at 95% 13%, #d9f8e9 0 16%, transparent 37%), var(--cream); min-height: 100vh; }
+button, a, select { font: inherit; }
+button, a, select { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, select:focus-visible { outline: 4px solid #2d7ff9; outline-offset: 3px; }
+
+.site-header, main, .site-footer { width: min(1160px, calc(100% - 32px)); margin-inline: auto; }
+.site-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; padding: 34px 0 24px; }
+.brand-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 22px; background: var(--ink); color: var(--sun); font-size: 2rem; box-shadow: 8px 8px 0 var(--coral); }
+.eyebrow { margin: 0 0 7px; font-size: .76rem; font-weight: 800; letter-spacing: .13em; color: var(--coral); }
+h1, h2, p { margin-top: 0; }
+h1 { margin-bottom: 8px; font-size: clamp(2.1rem, 5vw, 4.2rem); line-height: .98; letter-spacing: -.04em; }
+h2 { margin-bottom: 8px; font-size: clamp(1.35rem, 2.6vw, 2rem); line-height: 1.12; }
+.lede { max-width: 700px; margin-bottom: 0; color: var(--ink-soft); font-size: 1.04rem; line-height: 1.5; }
+.muted { color: var(--ink-soft); line-height: 1.5; }
+.install-button, .secondary-button { min-height: 52px; border: 0; border-radius: 16px; padding: 12px 18px; cursor: pointer; font-weight: 800; }
+.install-button { background: var(--ink); color: white; box-shadow: 0 8px 0 #071120; }
+.install-button:active, .secondary-button:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(19, 35, 58, .2); }
+.secondary-button { color: var(--ink); background: #eef2fb; border: 2px solid var(--line); }
+
+.quick-start, .qr-panel { display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 24px; border: 2px solid var(--line); border-radius: 26px; background: rgba(255,255,255,.78); box-shadow: var(--shadow); }
+.quick-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+.status-pill { min-height: 36px; display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 999px; background: #e8f8ef; color: #17633f; font-size: .9rem; font-weight: 800; }
+
+.lesson-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
+.lesson-card { position: relative; display: flex; flex-direction: column; min-height: 238px; padding: 20px; overflow: hidden; border: 2px solid var(--line); border-radius: 24px; background: var(--paper); box-shadow: 0 12px 24px rgba(19,35,58,.07); transition: transform .16s ease, box-shadow .16s ease; }
+.lesson-card::after { content: ""; position: absolute; width: 110px; height: 110px; border-radius: 50%; background: var(--card-accent); right: -38px; top: -40px; opacity: .52; }
+.lesson-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.lesson-number { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 15px; background: var(--card-accent); font-size: 1.2rem; font-weight: 900; }
+.lesson-icon { position: relative; z-index: 1; font-size: 2.1rem; margin: 18px 0 8px; }
+.lesson-card h3 { position: relative; z-index: 1; margin: 0 0 7px; font-size: 1.25rem; }
+.lesson-card p { position: relative; z-index: 1; flex: 1; margin-bottom: 16px; color: var(--ink-soft); line-height: 1.35; font-size: .95rem; }
+.lesson-link { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 10px 14px; border-radius: 15px; background: var(--ink); color: white; text-decoration: none; font-weight: 850; }
+.lesson-link:hover { background: #234167; }
+
+.qr-panel { margin: 24px 0 34px; background: linear-gradient(115deg, #fff, #fbf7ff); }
+.select-label { display: block; margin: 16px 0 6px; font-weight: 850; }
+.lesson-select { min-height: 50px; width: min(100%, 320px); padding: 10px 14px; border: 2px solid var(--line); border-radius: 14px; background: white; color: var(--ink); }
+.qr-url { max-width: 560px; margin: 12px 0 0; color: var(--ink-soft); font-size: .85rem; overflow-wrap: anywhere; }
+.qr-preview { display: grid; place-items: center; gap: 9px; min-width: 210px; padding: 18px; border-radius: 20px; background: white; border: 2px solid var(--line); }
+.qr-preview img { display: block; border-radius: 8px; image-rendering: pixelated; }
+.text-link { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 14px; border-radius: 12px; color: #315fd4; font-weight: 850; }
+.site-footer { display: flex; justify-content: space-between; gap: 16px; padding: 0 0 30px; color: var(--ink-soft); font-size: .9rem; }
+
+@media (max-width: 900px) { .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .site-header { grid-template-columns: auto 1fr; } .install-button { grid-column: 2; justify-self: start; } }
+@media (max-width: 620px) { .site-header, main, .site-footer { width: min(100% - 20px, 1160px); } .site-header { padding-top: 20px; } .brand-mark { width: 52px; height: 52px; border-radius: 17px; } .quick-start, .qr-panel { align-items: stretch; flex-direction: column; padding: 18px; } .quick-actions { justify-content: flex-start; } .lesson-grid { grid-template-columns: 1fr; gap: 12px; } .lesson-card { min-height: 210px; } .qr-preview { align-self: center; } .site-footer { flex-direction: column; gap: 4px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+

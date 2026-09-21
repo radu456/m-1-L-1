@@ -1,0 +1,13 @@
+{
+  "name": "Lecția 8 – Povestea din 3 imagini",
+  "short_name": "Lecția 8",
+  "lang": "ro",
+  "start_url": "./?step=start",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#15803d",
+  "background_color": "#effaf3",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+

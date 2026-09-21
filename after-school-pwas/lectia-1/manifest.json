@@ -1,0 +1,16 @@
+{
+  "name": "Fabrica de idei · Lecția 1",
+  "short_name": "Fabrica de idei",
+  "description": "Atelier interactiv de scriere creativă pentru copii de 8–9 ani.",
+  "lang": "ro",
+  "start_url": "./?step=welcome",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f3ff",
+  "theme_color": "#5b4bdb",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
+

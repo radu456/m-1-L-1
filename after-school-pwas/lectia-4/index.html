@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e45b3b">
+  <meta name="description" content="Lecția 4: Ce se întâmplă? Aplicație PWA pentru copii.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles/style.css">
+  <title>Lecția 4 · Ce se întâmplă?</title>
+</head>
+<body data-theme="coral">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./?step=1" aria-label="Începutul lecției">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span><strong>Lecția <span id="lessonNumber">4</span></strong><small id="lessonShortTitle">Ce se întâmplă?</small></span>
+      </a>
+      <div class="top-actions">
+        <span id="offlineBadge" class="status-badge" role="status">Se verifică...</span>
+        <button id="resetBtn" class="icon-button" type="button" title="Șterge răspunsurile">↺ <span>Reset</span></button>
+      </div>
+    </header>
+    <main id="mainContent">
+      <section class="hero" aria-labelledby="pageTitle">
+        <div class="hero-copy">
+          <p class="eyebrow">Atelier de povești · 30–40 min</p>
+          <h1 id="pageTitle">Ce se întâmplă?</h1>
+          <p id="pageIntro">Descoperă problema, alege misiunea și ajută personajul să treacă peste obstacole.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true"><span>🗺️</span><span>⚡</span><span>🧩</span></div>
+      </section>
+      <div class="progress-card" aria-label="Progresul lecției">
+        <div class="progress-meta"><span id="stepTitle">Pasul 1</span><span id="stepCount">1 / 10</span></div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <section id="stepHost" aria-live="polite"></section>
+      <nav class="step-nav" aria-label="Navigare lecție">
+        <button id="prevBtn" class="secondary-button" type="button">← Înapoi</button>
+        <button id="nextBtn" class="primary-button" type="button">Continuă →</button>
+      </nav>
+    </main>
+    <footer><span>Aplicație offline pentru after school</span><span>Răspunsurile se salvează pe această tabletă</span></footer>
+  </div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
+

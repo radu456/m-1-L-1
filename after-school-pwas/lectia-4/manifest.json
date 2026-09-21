@@ -1,0 +1,14 @@
+{
+  "name": "Atelier de povești · Lecția 4",
+  "short_name": "Lecția 4",
+  "description": "Ce se întâmplă? Lecție interactivă despre problemă și aventură.",
+  "lang": "ro",
+  "start_url": "./?step=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff4ee",
+  "theme_color": "#e45b3b",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
+

@@ -1,0 +1,5 @@
+_docx-inspect/
+node_modules/
+playwright-report/
+*.log
+

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#13233a" />
+    <meta name="description" content="Atelierul de povești – aplicații PWA pentru after school" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Atelierul de povești</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand-mark" aria-hidden="true">✦</div>
+      <div>
+        <p class="eyebrow">AFTER SCHOOL · ATELIER DIGITAL</p>
+        <h1>Atelierul de povești</h1>
+        <p class="lede">Alege lecția de azi. Fiecare activitate merge cu atingere, tastatură și fără internet după prima deschidere.</p>
+      </div>
+      <button class="install-button" id="install-button" type="button" hidden>Instalează aplicația</button>
+    </header>
+
+    <main>
+      <section class="quick-start" aria-labelledby="quick-start-title">
+        <div>
+          <p class="eyebrow">PENTRU COPII</p>
+          <h2 id="quick-start-title">Scanează codul lecției sau apasă o carte</h2>
+          <p class="muted">Codurile QR pot trimite direct la lecția zilei. Linkurile de mai jos sunt și butoane pentru navigarea cu tastatura.</p>
+        </div>
+        <div class="quick-actions" role="group" aria-label="Acțiuni rapide">
+          <button class="secondary-button" id="copy-index-link" type="button">Copiază linkul acestui panou</button>
+          <span class="status-pill" id="save-status" role="status" aria-live="polite">Pregătit</span>
+        </div>
+      </section>
+
+      <section class="lesson-grid" id="lesson-grid" aria-label="Lecțiile disponibile"></section>
+
+      <section class="qr-panel" aria-labelledby="qr-title">
+        <div>
+          <p class="eyebrow">PENTRU EDUCATOR</p>
+          <h2 id="qr-title">Link rapid pentru codul QR</h2>
+          <p class="muted">Selectează o lecție pentru a vedea adresa ei. Poți folosi imaginea QR pentru afișul din clasă.</p>
+          <label class="select-label" for="qr-lesson">Lecția pentru cod</label>
+          <select id="qr-lesson" class="lesson-select"></select>
+          <p class="qr-url" id="qr-url" aria-live="polite"></p>
+        </div>
+        <div class="qr-preview">
+          <img id="qr-image" alt="Cod QR pentru lecția selectată" width="176" height="176" />
+          <a id="qr-open" class="text-link" target="_blank" rel="noreferrer">Deschide linkul</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Atelierul de povești · lecții 1–8</span>
+      <span>Progresul se păstrează pe această tabletă.</span>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
+

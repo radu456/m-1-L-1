@@ -1,0 +1,13 @@
+{
+  "name": "Lecția 7 – Povestea mea",
+  "short_name": "Lecția 7",
+  "lang": "ro",
+  "start_url": "./?step=start",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#6d4aff",
+  "background_color": "#f4f0ff",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+

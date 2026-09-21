@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title desc">
+  <title id="title">Fabrica de idei</title>
+  <desc id="desc">O lampă de idei violetă cu o stea galbenă</desc>
+  <rect width="192" height="192" rx="42" fill="#5b4bdb"/>
+  <circle cx="96" cy="84" r="48" fill="#ffdf75"/>
+  <path d="M67 113h58l-9 23H76z" fill="#ff9e5e"/>
+  <path d="M79 138h34v12H79z" rx="5" fill="#fff"/>
+  <path d="M96 24l6 18 19 1-15 12 5 19-15-11-16 11 6-19-15-12 19-1z" fill="#fff"/>
+  <circle cx="79" cy="83" r="7" fill="#5b4bdb"/>
+  <circle cx="113" cy="83" r="7" fill="#5b4bdb"/>
+  <path d="M81 101c9 9 21 9 30 0" fill="none" stroke="#5b4bdb" stroke-width="6" stroke-linecap="round"/>
+</svg>
+

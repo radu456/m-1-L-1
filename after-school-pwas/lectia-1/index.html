@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#5b4bdb">
+    <meta name="description" content="Fabrica de idei - aplicație PWA pentru scriere creativă.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <title>Fabrica de idei | Lecția 1</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero" aria-labelledby="app-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Atelier de scriere creativă · Lecția 1</p>
+          <h1 id="app-title">✨ Fabrica de idei</h1>
+          <p class="hero-lead">Citește, joacă-te cu ideile și construiește începutul unei povești numai a ta.</p>
+        </div>
+        <div class="hero-actions">
+          <div class="progress-card" aria-label="Progresul lecției">
+            <span id="progressText">Pasul 1 din 6</span>
+            <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-label="Progres">
+              <span id="progressFill"></span>
+            </div>
+          </div>
+          <button id="installBtn" class="button button-light" type="button" hidden>📲 Instalează aplicația</button>
+        </div>
+      </header>
+
+      <div id="installHint" class="install-hint" role="status" hidden>
+        Poți instala lecția pe tabletă din meniul browserului: <strong>Adaugă pe ecranul principal</strong>.
+      </div>
+
+      <nav class="step-nav" aria-label="Pașii lecției">
+        <button class="step-link is-active" type="button" data-step="welcome"><span>1</span> Povestea</button>
+        <button class="step-link" type="button" data-step="quiz"><span>2</span> Ce ai înțeles?</button>
+        <button class="step-link" type="button" data-step="ideas"><span>3</span> De unde vin ideile?</button>
+        <button class="step-link" type="button" data-step="detective"><span>4</span> Detectivul ideilor</button>
+        <button class="step-link" type="button" data-step="mix"><span>5</span> Amestecă și creează</button>
+        <button class="step-link" type="button" data-step="crazy"><span>6</span> Ideea trăsnită</button>
+      </nav>
+
+      <main id="lessonMain">
+        <section id="step-welcome" class="step-panel is-active" data-step-panel="welcome" aria-labelledby="welcome-title">
+          <div class="section-heading">
+            <p class="kicker">📖 Poveste</p>
+            <h2 id="welcome-title">Fabrica de idei</h2>
+            <p>Într-o după-amiază, Luca descoperă că o idee mică poate deschide o aventură uriașă.</p>
+          </div>
+          <article id="story" class="story-card" aria-label="Povestea Fabrica de idei"></article>
+          <div class="tip-card">
+            <span class="tip-icon">💡</span>
+            <p><strong>Ține minte:</strong> o poveste poate începe de la o idee foarte simplă. Imaginația este cea care o transformă într-o aventură.</p>
+          </div>
+          <div class="step-actions">
+            <button class="button button-primary" type="button" data-next="quiz">Continuă la întrebări <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <section id="step-quiz" class="step-panel" data-step-panel="quiz" aria-labelledby="quiz-title" hidden>
+          <div class="section-heading">
+            <p class="kicker">🧠 1 · Verifică-ți atenția</p>
+            <h2 id="quiz-title">Ce ai înțeles din poveste?</h2>
+            <p>Alege un singur răspuns pentru fiecare întrebare.</p>
+          </div>
+          <form id="quizForm" class="stack-form" novalidate>
+            <div id="quizList" class="question-list"></div>
+            <div class="inline-actions">
+              <button class="button button-primary" type="submit">Verifică răspunsurile</button>
+              <button class="button button-quiet" type="button" id="resetQuiz">Șterge răspunsurile</button>
+            </div>
+          </form>
+          <div id="quizFeedback" class="feedback" role="status" aria-live="polite"></div>
+          <div class="step-actions"><button class="button button-primary" type="button" data-next="ideas">Mergem la joc <span aria-hidden="true">→</span></button></div>
+        </section>
+
+        <section id="step-ideas" class="step-panel" data-step-panel="ideas" aria-labelledby="ideas-title" hidden>
+          <div class="section-heading">
+            <p class="kicker">🎲 2 · Joc</p>
+            <h2 id="ideas-title">De unde vin ideile?</h2>
+            <p>Bifează <strong>toate</strong> lucrurile care pot inspira o poveste.</p>
+          </div>
+          <div id="ideasChoices" class="choice-grid"></div>
+          <div class="inline-actions">
+            <button id="checkIdeas" class="button button-primary" type="button">Verifică jocul</button>
+            <button id="clearIdeas" class="button button-quiet" type="button">Debifează tot</button>
+          </div>
+          <div id="ideasFeedback" class="feedback" role="status" aria-live="polite"></div>
+          <div class="step-actions"><button class="button button-primary" type="button" data-next="detective">Următorul joc <span aria-hidden="true">→</span></button></div>
+        </section>
+
+        <section id="step-detective" class="step-panel" data-step-panel="detective" aria-labelledby="detective-title" hidden>
+          <div class="section-heading">
+            <p class="kicker">🔍 3 · Detectivul ideilor</p>
+            <h2 id="detective-title">Ce te face să vrei să afli „ce se întâmplă mai departe”?</h2>
+            <p>Alege ideea misterioasă din fiecare situație.</p>
+          </div>
+          <form id="detectiveForm" class="question-list" novalidate>
+            <div id="detectiveList"></div>
+            <button class="button button-primary" type="submit">Verifică alegerile</button>
+          </form>
+          <div id="detectiveFeedback" class="feedback" role="status" aria-live="polite"></div>
+          <div class="step-actions"><button class="button button-primary" type="button" data-next="mix">Construiește o idee <span aria-hidden="true">→</span></button></div>
+        </section>
+
+        <section id="step-mix" class="step-panel" data-step-panel="mix" aria-labelledby="mix-title" hidden>
+          <div class="section-heading">
+            <p class="kicker">🧩 4 · Atelier</p>
+            <h2 id="mix-title">Amestecă și creează!</h2>
+            <p>Alege câte un element din fiecare categorie: <strong>1 personaj + 1 loc + 1 situație</strong>.</p>
+          </div>
+          <div class="mix-grid">
+            <label class="field-card" for="mixCharacter"><span class="field-label">🧍 Personaj</span><select id="mixCharacter"></select></label>
+            <label class="field-card" for="mixPlace"><span class="field-label">📍 Loc</span><select id="mixPlace"></select></label>
+            <label class="field-card" for="mixSituation"><span class="field-label">⚡ Situație</span><select id="mixSituation"></select></label>
+          </div>
+          <button id="createIdea" class="button button-primary create-button" type="button">🪄 Creează ideea</button>
+          <div id="mixResult" class="result-card" role="status" aria-live="polite">
+            <span class="result-label">Ideea ta va apărea aici</span>
+          </div>
+          <label class="textarea-card" for="mixContinuation"><span class="field-label">Acum continuă tu ideea în 1–2 propoziții.</span><textarea id="mixContinuation" rows="4" placeholder="Scrie aici continuarea ta..."></textarea></label>
+          <div class="step-actions"><button class="button button-primary" type="button" data-next="crazy">Mai inventăm una <span aria-hidden="true">→</span></button></div>
+        </section>
+
+        <section id="step-crazy" class="step-panel" data-step-panel="crazy" aria-labelledby="crazy-title" hidden>
+          <div class="section-heading">
+            <p class="kicker">🤪 5 · Joc</p>
+            <h2 id="crazy-title">Ideea trăsnită</h2>
+            <p>Alege exact <strong>două</strong> lucruri care par fără legătură, apoi inventează ce se întâmplă.</p>
+          </div>
+          <div id="crazyChoices" class="chip-grid" role="group" aria-label="Elemente pentru ideea trăsnită"></div>
+          <p id="crazyCount" class="selection-count" aria-live="polite">Ai ales 0 din 2.</p>
+          <div id="crazyResult" class="result-card" role="status" aria-live="polite"><span class="result-label">Alege două elemente ca să începi.</span></div>
+          <label class="textarea-card" for="crazyContinuation"><span class="field-label">Ce se întâmplă mai departe?</span><textarea id="crazyContinuation" rows="5" placeholder="Scrie aventura ta..."></textarea></label>
+          <div id="crazyFeedback" class="feedback" role="status" aria-live="polite"></div>
+          <div class="step-actions"><button class="button button-quiet" type="button" id="resetAll">Reia lecția de la început</button></div>
+        </section>
+      </main>
+
+      <footer class="app-footer">Lucrează în ritmul tău · Răspunsurile se păstrează pe această tabletă.</footer>
+    </div>
+    <script src="app.js" defer></script>
+  </body>
+</html>
+

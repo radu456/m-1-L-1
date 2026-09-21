@@ -1,0 +1,14 @@
+{
+  "name": "Atelier de povești · Lecția 5",
+  "short_name": "Lecția 5",
+  "description": "Cum fac povestea interesantă? Lecție interactivă despre descrieri, emoții și dialog.",
+  "lang": "ro",
+  "start_url": "./?step=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eafaf7",
+  "theme_color": "#159a8c",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
+

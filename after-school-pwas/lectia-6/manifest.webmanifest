@@ -1,0 +1,13 @@
+{
+  "name": "Lecția 6 – Construim povestea",
+  "short_name": "Lecția 6",
+  "lang": "ro",
+  "start_url": "./?step=start",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0b7285",
+  "background_color": "#eaf8f7",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+

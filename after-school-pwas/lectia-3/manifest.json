@@ -1,0 +1,14 @@
+{
+  "name": "Atelier de povești · Lecția 3",
+  "short_name": "Lecția 3",
+  "description": "Unde și când se întâmplă? Lecție interactivă pentru copii.",
+  "lang": "ro",
+  "start_url": "./?step=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f1ff",
+  "theme_color": "#5b4bdb",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
+
