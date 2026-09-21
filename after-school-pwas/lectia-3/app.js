@@ -123,19 +123,31 @@
   }
   function checkboxGroup(id, options, max, legend) {
     var selected = Array.isArray(fieldValue(id)) ? fieldValue(id) : [];
+    var expected = id === "missingDetails" ? ["Culoarea frunzelor", "Un sunet", "O urmă misterioasă", "Mirosul pădurii", "O lumină ciudată"] : null;
+    var verified = expected && Object.prototype.hasOwnProperty.call(state.multiFeedback, id);
     var html = "<fieldset class=\"question-card\"><legend>" + legend + (max ? " <span class=\"score\">(maximum " + max + ")</span>" : "") + "</legend><div class=\"choice-grid\">";
-    options.forEach(function (option) { html += choice(id, option, option, "checkbox", selected.indexOf(option) >= 0, id, max); });
-    return html + "</div></fieldset>";
+    options.forEach(function (option) {
+      var isSelected = selected.indexOf(option) >= 0;
+      var cls = verified ? (expected.indexOf(option) >= 0 ? " is-correct" : isSelected ? " is-wrong" : "") : "";
+      if (verified && expected.indexOf(option) >= 0 && !isSelected) cls += " correct-answer";
+      html += "<label class=\"choice" + cls + "\"><input type=\"checkbox\" name=\"" + id + "\" value=\"" + esc(option) + "\" data-field=\"" + id + "\"" + (max ? " data-max=\"" + max + "\"" : "") + (isSelected ? " checked" : "") + "><span>" + option + "</span>" + (verified && expected.indexOf(option) >= 0 ? "<span class=\"answer-mark\">✓</span>" : verified && isSelected ? "<span class=\"answer-mark\">✕</span>" : "") + "</label>";
+    });
+    return html + "</div>" + (verified ? "<div class=\"answer-explanation " + (selected.length === expected.length && expected.every(function (x) { return selected.indexOf(x) >= 0; }) ? "good\" >✅ Toate cele 5 detalii utile sunt alese." : "bad\" >❌ Verde = detaliu util; roșu = alegere care nu ajută descrierea. Răspunsurile corecte sunt primele 5 variante.") + "</div>" : "") + "</fieldset>";
   }
   function renderQuiz(id, questions) {
     var saved = state.quiz[id] || [];
+    var verified = state.scores[id] != null;
     var html = "<div class=\"question-list\">";
     questions.forEach(function (question, qi) {
       html += "<fieldset class=\"question-card\"><legend>" + (qi + 1) + ". " + question.text + "</legend><div class=\"choice-grid\">";
       question.options.forEach(function (option, oi) {
-        html += "<label class=\"choice\"><input type=\"radio\" name=\"" + id + "-q" + qi + "\" value=\"" + oi + "\" data-quiz-id=\"" + id + "\" data-q-index=\"" + qi + "\"" + (String(saved[qi]) === String(oi) ? " checked" : "") + "><span>" + option + "</span></label>";
+        var picked = String(saved[qi]) === String(oi), right = oi === question.answer;
+        var cls = verified && (picked || right) ? (right ? " is-correct" : " is-wrong") : "";
+        if (verified && right && !picked) cls += " correct-answer";
+        html += "<label class=\"choice" + cls + "\"><input type=\"radio\" name=\"" + id + "-q" + qi + "\" value=\"" + oi + "\" data-quiz-id=\"" + id + "\" data-q-index=\"" + qi + "\"" + (picked ? " checked" : "") + "><span>" + option + "</span>" + (verified && right ? "<span class=\"answer-mark\">✓</span>" : verified && picked ? "<span class=\"answer-mark\">✕</span>" : "") + "</label>";
       });
-      html += "</div></fieldset>";
+      if (verified) html += "</div><div class=\"answer-explanation " + (String(saved[qi]) === String(question.answer) ? "good\" >✅ Corect!" : "bad\" >❌ Răspunsul corect este: <strong>" + question.options[question.answer] + "</strong>.") + "</div></fieldset>";
+      else html += "</div></fieldset>";
     });
     html += "</div><div class=\"action-row\"><button class=\"secondary-button\" type=\"button\" data-action=\"check-quiz\" data-id=\"" + id + "\">Verifică răspunsurile</button>";
     if (state.scores[id] != null) {
@@ -146,23 +158,28 @@
   }
   function renderDragBoard(group, items, zones, instruction) {
     var assigned = state.drags[group] || {};
+    var verified = Object.prototype.hasOwnProperty.call(state.dragFeedback, group);
     var html = "<p class=\"tip\"><strong>Joacă-te:</strong> " + instruction + " Poți trage cu degetul sau poți atinge un cartonaș, apoi categoria.</p><div class=\"drag-board\">";
     zones.forEach(function (zone) {
       html += "<section class=\"drag-column\" data-drop-group=\"" + group + "\" data-drop-zone=\"" + zone.id + "\" data-zone=\"" + zone.id + "\" tabindex=\"0\"><h3>" + zone.title + "</h3><p class=\"drop-hint\">Atinge aici pentru a-l pune în categorie.</p><div class=\"drag-tray\">";
       items.forEach(function (item) {
-        if (assigned[item.id] === zone.id) html += dragChip(group, item, true);
+        if (assigned[item.id] === zone.id) html += dragChip(group, item, true, verified);
       });
       html += "</div></section>";
     });
     html += "<section class=\"drag-column\" data-drop-group=\"" + group + "\" data-drop-zone=\"tray\" data-zone=\"tray\" tabindex=\"0\"><h3>Cartonașe rămase</h3><p class=\"drop-hint\">Aici se întorc cartonașele.</p><div class=\"drag-tray\">";
     items.forEach(function (item) {
-      if (!assigned[item.id] || assigned[item.id] === "tray") html += dragChip(group, item, false);
+      if (!assigned[item.id] || assigned[item.id] === "tray") html += dragChip(group, item, false, verified);
     });
     html += "</div></section></div>";
     return html;
   }
-  function dragChip(group, item, assigned) {
-    return "<button class=\"drag-chip" + (assigned ? " assigned" : "") + "\" type=\"button\" draggable=\"true\" data-drag-group=\"" + group + "\" data-drag-id=\"" + item.id + "\" aria-label=\"" + esc(item.label) + "\">" + item.label + "</button>";
+  function dragChip(group, item, assigned, verified) {
+    var actual = (state.drags[group] || {})[item.id] || "tray";
+    var cls = assigned ? " assigned" : "";
+    if (verified) cls += actual === item.zone ? " is-correct" : " is-wrong";
+    var expectedLabel = item.zone === "real" ? "Decor real" : "Decor fantastic";
+    return "<button class=\"drag-chip" + cls + "\" type=\"button\" draggable=\"true\" data-drag-group=\"" + group + "\" data-drag-id=\"" + item.id + "\" aria-label=\"" + esc(item.label) + "\">" + item.label + (verified ? (actual === item.zone ? " ✓" : " ✕ · corect: " + expectedLabel) : "") + "</button>";
   }
   function renderStep3() {
     return cardStart("Pasul 3", "Real sau fantastic?", "🔍") +
@@ -301,14 +318,14 @@
     var selected = Array.isArray(state.fields[id]) ? state.fields[id] : [];
     var correct = ["Culoarea frunzelor", "Un sunet", "O urmă misterioasă", "Mirosul pădurii", "O lumină ciudată"];
     var good = selected.length === 5 && correct.every(function (item) { return selected.indexOf(item) >= 0; });
-    state.multiFeedback[id] = good ? "Exact! 🌟 Detaliile îi permit cititorului să-și imagineze scena." : "Mai încearcă: primele 5 variante sunt detalii utile, nu „Nimic”.";
+    state.multiFeedback[id] = good ? "Exact! 🌟 Detaliile îi permit cititorului să-și imagineze scena." : "Roșu = alegere nepotrivită. Răspunsurile corecte sunt: Culoarea frunzelor, Un sunet, O urmă misterioasă, Mirosul pădurii și O lumină ciudată.";
     saveState();
     renderStep(state.currentStep);
   }
   function checkDrag(group) {
     var assigned = state.drags[group] || {};
     var good = sortItems.every(function (item) { return assigned[item.id] === item.zone; });
-    state.dragFeedback[group] = good ? "Perfect! 🌟 Un decor real seamănă cu lumea pe care o cunoaștem, iar unul fantastic ne permite să inventăm aproape orice." : "Unele cartonașe mai au nevoie de o categorie. Mută-le și verifică din nou.";
+    state.dragFeedback[group] = good ? "Perfect! 🌟 Un decor real seamănă cu lumea pe care o cunoaștem, iar unul fantastic ne permite să inventăm aproape orice." : "Roșu = categorie greșită. Cartonașele verzi sunt corecte; fiecare cartonaș roșu afișează categoria corectă.";
     saveState();
     renderStep(state.currentStep);
   }

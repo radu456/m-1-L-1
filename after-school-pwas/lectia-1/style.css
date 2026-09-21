@@ -156,3 +156,17 @@ textarea { resize: vertical; min-height: 110px; padding: 12px; line-height: 1.5;
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
 
+/* Feedback clar și prietenos după verificare */
+.choice.is-correct { border-color: #27a36a; background: #eafaf2; box-shadow: 0 0 0 2px rgba(39,163,106,.12); }
+.choice.is-wrong { border-color: #dc5a67; background: #fff0f2; }
+.choice.correct-answer { border-style: dashed; }
+.answer-mark { flex: 0 0 auto; min-width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; font-weight: 900; color: #fff; background: #27a36a; }
+.choice.is-wrong .answer-mark { background: #dc5a67; }
+.answer-explanation { margin-top: 10px; padding: 10px 12px; border-radius: 12px; font-size: .94rem; line-height: 1.45; }
+.answer-explanation.good { color: #146b52; background: #eafaf2; }
+.answer-explanation.bad { color: #9b3e3e; background: #fff0f2; }
+.feedback.success, .feedback.error { animation: feedback-pop .32s ease both; }
+@keyframes feedback-pop { 0% { opacity: 0; transform: translateY(6px) scale(.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .feedback.success, .feedback.error { animation: none; } }
+.answer-explanation.good{animation:joyful-bounce .42s ease both}.answer-explanation.bad{animation:gentle-shake .38s ease both}.feedback.success,.feedback.good{position:relative}.feedback.success::after,.feedback.good::after{content:"✨";display:inline-block;margin-left:6px;animation:twinkle 1.1s ease-in-out infinite}@keyframes joyful-bounce{0%{opacity:0;transform:scale(.96) translateY(5px)}65%{transform:scale(1.02) translateY(0)}100%{opacity:1;transform:scale(1)}}@keyframes gentle-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}@keyframes twinkle{0%,100%{transform:scale(1) rotate(0deg);opacity:.7}50%{transform:scale(1.2) rotate(8deg);opacity:1}}@media(prefers-reduced-motion:reduce){.answer-explanation.good,.answer-explanation.bad,.feedback.success::after,.feedback.good::after{animation:none}}
+

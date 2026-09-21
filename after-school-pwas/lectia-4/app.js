@@ -81,33 +81,37 @@
   }
   function checks(id, options, max, legend) {
     var chosen = Array.isArray(value(id)) ? value(id) : [];
+    var expected = id === "problemChoices" ? problemItems.filter(function (x) { return x.zone === "problem"; }).map(function (x) { return x.label; }) : id === "bridgeActions" ? ["Caută o altă cale.", "Construiește o soluție pentru a traversa.", "Cere ajutorul cuiva.", "Încearcă să găsească un alt pod."] : null;
+    var verified = expected && Object.prototype.hasOwnProperty.call(state.multiFeedback, id);
     var h = "<fieldset class=\"question-card\"><legend>" + legend + (max ? " <span class=\"score\">(maximum " + max + ")</span>" : "") + "</legend><div class=\"choice-grid\">";
-    options.forEach(function (o) { h += choice(id, o, o, "checkbox", chosen.indexOf(o) >= 0, id, max); });
-    return h + "</div></fieldset>";
+    options.forEach(function (o) { var selected = chosen.indexOf(o) >= 0; var cls = verified ? (expected.indexOf(o) >= 0 ? " is-correct" : selected ? " is-wrong" : "") : ""; if (verified && expected.indexOf(o) >= 0 && !selected) cls += " correct-answer"; h += "<label class=\"choice" + cls + "\"><input type=\"checkbox\" name=\"" + id + "\" value=\"" + esc(o) + "\" data-field=\"" + id + "\"" + (selected ? " checked" : "") + "><span>" + o + "</span>" + (verified && expected.indexOf(o) >= 0 ? "<span class=\"answer-mark\">✓</span>" : verified && selected ? "<span class=\"answer-mark\">✕</span>" : "") + "</label>"; });
+    return h + "</div>" + (verified ? "<div class=\"answer-explanation " + (chosen.length === expected.length && expected.every(function (x) { return chosen.indexOf(x) >= 0; }) ? "good\" >✅ Toate variantele potrivite sunt verzi." : "bad\" >❌ Verde = răspuns potrivit; roșu = alegere nepotrivită. Răspunsurile potrivite sunt marcate cu verde.") + "</div>" : "") + "</fieldset>";
   }
   function quiz(id) {
     var old = state.quiz[id] || [];
+    var verified = state.scores[id] != null;
     var h = "<div class=\"question-list\">";
     quizQuestions.forEach(function (q, qi) {
       h += "<fieldset class=\"question-card\"><legend>" + (qi + 1) + ". " + q.text + "</legend><div class=\"choice-grid\">";
-      q.options.forEach(function (o, oi) { h += "<label class=\"choice\"><input type=\"radio\" name=\"" + id + "-q" + qi + "\" value=\"" + oi + "\" data-quiz-id=\"" + id + "\" data-q-index=\"" + qi + "\"" + (String(old[qi]) === String(oi) ? " checked" : "") + "><span>" + o + "</span></label>"; });
-      h += "</div></fieldset>";
+      q.options.forEach(function (o, oi) { var picked = String(old[qi]) === String(oi), right = oi === q.answer; var cls = verified && (picked || right) ? (right ? " is-correct" : " is-wrong") : ""; if (verified && right && !picked) cls += " correct-answer"; h += "<label class=\"choice" + cls + "\"><input type=\"radio\" name=\"" + id + "-q" + qi + "\" value=\"" + oi + "\" data-quiz-id=\"" + id + "\" data-q-index=\"" + qi + "\"" + (picked ? " checked" : "") + "><span>" + o + "</span>" + (verified && right ? "<span class=\"answer-mark\">✓</span>" : verified && picked ? "<span class=\"answer-mark\">✕</span>" : "") + "</label>"; });
+      h += verified ? "</div><div class=\"answer-explanation " + (String(old[qi]) === String(q.answer) ? "good\" >✅ Corect!" : "bad\" >❌ Răspunsul corect este: <strong>" + q.options[q.answer] + "</strong>.") + "</div></fieldset>" : "</div></fieldset>";
     });
     h += "</div><div class=\"action-row\"><button class=\"secondary-button\" type=\"button\" data-action=\"quiz\" data-id=\"" + id + "\">Verifică răspunsurile</button>";
     if (state.scores[id] != null) h += "<div class=\"feedback " + (state.scores[id] === quizQuestions.length ? "" : "neutral") + "\" role=\"status\">" + (state.scores[id] === quizQuestions.length ? "Excelent! Ai înțeles problema lui Max. 🌟" : "Bună încercare! Recitește scena și mai verifică.") + " <span class=\"score\">" + state.scores[id] + "/" + quizQuestions.length + "</span></div>";
     return h + "</div>";
   }
-  function chip(group, item, assigned) { return "<button class=\"drag-chip" + (assigned ? " assigned" : "") + "\" type=\"button\" draggable=\"true\" data-drag-group=\"" + group + "\" data-drag-id=\"" + item.id + "\">" + item.label + "</button>"; }
+  function chip(group, item, assigned, verified) { var actual = (state.drags[group] || {})[item.id] || "tray"; var cls = assigned ? " assigned" : ""; if (verified) cls += actual === item.zone ? " is-correct" : " is-wrong"; var expectedLabel = group === "problem-match" ? ((missionZones.find(function (z) { return z.id === item.zone; }) || {}).title || ("Misiunea " + item.zone)) : (item.zone === "problem" ? "Este o problemă" : "Nu este o problemă"); return "<button class=\"drag-chip" + cls + "\" type=\"button\" draggable=\"true\" data-drag-group=\"" + group + "\" data-drag-id=\"" + item.id + "\">" + item.label + (verified ? (actual === item.zone ? " ✓" : " ✕ · corect: " + esc(expectedLabel)) : "") + "</button>"; }
   function board(group, items, zones, instruction) {
     var a = state.drags[group] || {};
+    var verified = Object.prototype.hasOwnProperty.call(state.dragFeedback, group);
     var h = "<p class=\"tip\"><strong>Joacă-te:</strong> " + instruction + " Trage cartonașul sau atinge-l, apoi categoria.</p><div class=\"drag-board\">";
     zones.forEach(function (z) {
       h += "<section class=\"drag-column\" data-drop-group=\"" + group + "\" data-drop-zone=\"" + z.id + "\" tabindex=\"0\"><h3>" + z.title + "</h3><p class=\"drop-hint\">Atinge aici pentru a-l pune.</p><div class=\"drag-tray\">";
-      items.forEach(function (it) { if (a[it.id] === z.id) h += chip(group, it, true); });
+      items.forEach(function (it) { if (a[it.id] === z.id) h += chip(group, it, true, verified); });
       h += "</div></section>";
     });
     h += "<section class=\"drag-column\" data-drop-group=\"" + group + "\" data-drop-zone=\"tray\" tabindex=\"0\"><h3>Cartonașe rămase</h3><p class=\"drop-hint\">Mută aici pentru a-l elibera.</p><div class=\"drag-tray\">";
-    items.forEach(function (it) { if (!a[it.id] || a[it.id] === "tray") h += chip(group, it, false); });
+    items.forEach(function (it) { if (!a[it.id] || a[it.id] === "tray") h += chip(group, it, false, verified); });
     return h + "</div></section></div>";
   }
   function render(index) {
@@ -206,21 +210,21 @@
     var chosen = Array.isArray(value("problemChoices")) ? value("problemChoices") : [];
     var correct = problemItems.filter(function (x) { return x.zone === "problem"; }).map(function (x) { return x.label; });
     var ok = chosen.length === correct.length && correct.every(function (x) { return chosen.indexOf(x) >= 0; });
-    state.multiFeedback.problemChoices = ok ? "Bravo! O problemă îl face pe personaj să trebuiască să facă ceva." : "Mai încearcă: alege situațiile care schimbă direcția poveștii (nu micul dejun, școala liniștită sau ghiozdanul).";
+    state.multiFeedback.problemChoices = ok ? "Bravo! O problemă îl face pe personaj să trebuiască să facă ceva." : "Roșu = nu este o problemă pentru această poveste. Variantele potrivite sunt: pierderea hărții, ușa secretă, castelul blocat, dispariția prietenului, furtuna care distruge podul și obiectul de găsit înainte de apus.";
     save(); render(state.currentStep);
   }
   function checkBridge() {
     var chosen = Array.isArray(value("bridgeActions")) ? value("bridgeActions") : [];
     var correct = ["Caută o altă cale.", "Construiește o soluție pentru a traversa.", "Cere ajutorul cuiva.", "Încearcă să găsească un alt pod."];
     var ok = chosen.length === correct.length && correct.every(function (x) { return chosen.indexOf(x) >= 0; });
-    state.multiFeedback.bridgeActions = ok ? "Exact! Toate variantele care încearcă să rezolve problema sunt potrivite." : "Caută ideile în care personajul încearcă o soluție. Așteptarea fără să facă nimic nu rezolvă problema.";
+    state.multiFeedback.bridgeActions = ok ? "Exact! Toate variantele care încearcă să rezolve problema sunt potrivite." : "Verzi sunt: caută o altă cale, construiește o soluție, cere ajutor și caută alt pod. „Așteaptă fără să facă nimic” rămâne roșu.";
     save(); render(state.currentStep);
   }
   function checkDrag(group) {
     var assigned = state.drags[group] || {};
     var items = group === "problem-match" ? pairItems : problemItems;
     var ok = items.every(function (x) { return assigned[x.id] === x.zone; });
-    state.dragFeedback[group] = ok ? "Foarte bine! Fiecare problemă are o misiune potrivită. 🌟" : "Unele cartonașe nu sunt încă la locul lor. Mută-le și verifică din nou.";
+    state.dragFeedback[group] = ok ? "Foarte bine! Fiecare problemă are o misiune potrivită. 🌟" : "Roșu = potrivire greșită; fiecare cartonaș arată acum numărul misiunii corecte. Mută-l și verifică din nou.";
     save(); render(state.currentStep);
   }
   function dragPayload(s) { var p = String(s || "").split("::"); return p.length === 2 ? { group: p[0], id: p[1] } : null; }

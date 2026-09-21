@@ -88,7 +88,8 @@
     detective: Array(detectiveCases.length).fill(null),
     mix: { character: 0, place: 0, situation: 0, continuation: "" },
     crazy: { selected: [], continuation: "" },
-    feedback: { quiz: "", ideas: "", detective: "", crazy: "" }
+    feedback: { quiz: "", ideas: "", detective: "", crazy: "" },
+    verification: { quiz: false, ideas: false, detective: false }
   };
 
   function cloneDefaults() {
@@ -107,7 +108,8 @@
         detective: Array.isArray(saved.detective) ? saved.detective.slice(0, detectiveCases.length) : cloneDefaults().detective,
         mix: { ...cloneDefaults().mix, ...(saved.mix || {}) },
         crazy: { ...cloneDefaults().crazy, ...(saved.crazy || {}) },
-        feedback: { ...cloneDefaults().feedback, ...(saved.feedback || {}) }
+        feedback: { ...cloneDefaults().feedback, ...(saved.feedback || {}) },
+        verification: { ...cloneDefaults().verification, ...(saved.verification || {}) }
       };
     } catch (_) {
       return cloneDefaults();
@@ -136,43 +138,48 @@
   }
 
   function renderQuiz() {
+    const verified = !!state.verification.quiz;
     $("#quizList").innerHTML = quizQuestions.map((question, qIndex) => `
       <div class="question-card">
         <fieldset>
           <legend>${qIndex + 1}. ${escapeHtml(question.prompt)}</legend>
           <div class="option-list">
             ${question.options.map((option, optionIndex) => `
-              <label class="choice">
+              <label class="choice ${verified && (state.quiz[qIndex] === optionIndex || optionIndex === question.answer) ? (optionIndex === question.answer ? "is-correct" : "is-wrong") : ""} ${verified && optionIndex === question.answer && state.quiz[qIndex] !== question.answer ? "correct-answer" : ""}">
                 <input type="radio" name="quiz-${qIndex}" value="${optionIndex}" ${state.quiz[qIndex] === optionIndex ? "checked" : ""}>
-                <span class="choice-text">${String.fromCharCode(97 + optionIndex)}) ${escapeHtml(option)}</span>
+                <span class="choice-text">${String.fromCharCode(97 + optionIndex)}) ${escapeHtml(option)}</span>${verified && optionIndex === question.answer ? '<span class="answer-mark" aria-label="răspuns corect">✓</span>' : verified && state.quiz[qIndex] === optionIndex ? '<span class="answer-mark" aria-label="răspuns ales greșit">✕</span>' : ""}
               </label>`).join("")}
           </div>
+          ${verified ? `<div class="answer-explanation ${state.quiz[qIndex] === question.answer ? "good" : "bad"}" role="status">${state.quiz[qIndex] === null || state.quiz[qIndex] === undefined ? `⚠️ Nu ai ales un răspuns. Răspunsul corect este: <strong>${escapeHtml(question.options[question.answer])}</strong>.` : state.quiz[qIndex] === question.answer ? "✅ Corect! Ai urmărit foarte bine povestea." : `❌ Ai ales „${escapeHtml(question.options[state.quiz[qIndex]])}”. Răspunsul corect este: <strong>${escapeHtml(question.options[question.answer])}</strong>.`}</div>` : ""}
         </fieldset>
       </div>`).join("");
     renderFeedback("#quizFeedback", state.feedback.quiz);
   }
 
   function renderIdeas() {
+    const verified = !!state.verification.ideas;
     $("#ideasChoices").innerHTML = inspirationChoices.map((choice) => `
-      <label class="choice">
+      <label class="choice ${verified ? (choice.correct ? "is-correct" : state.ideas.includes(choice.id) ? "is-wrong" : "") : ""} ${verified && choice.correct && !state.ideas.includes(choice.id) ? "correct-answer" : ""}">
         <input type="checkbox" value="${choice.id}" ${state.ideas.includes(choice.id) ? "checked" : ""}>
-        <span class="choice-text">${escapeHtml(choice.label)}</span>
+        <span class="choice-text">${escapeHtml(choice.label)}</span>${verified && choice.correct ? '<span class="answer-mark" aria-label="sursă corectă">✓</span>' : verified && state.ideas.includes(choice.id) ? '<span class="answer-mark" aria-label="alegere nepotrivită">✕</span>' : ""}
       </label>`).join("");
     renderFeedback("#ideasFeedback", state.feedback.ideas);
   }
 
   function renderDetective() {
+    const verified = !!state.verification.detective;
     $("#detectiveList").innerHTML = detectiveCases.map((item, caseIndex) => `
       <div class="question-card">
         <fieldset>
           <legend>${escapeHtml(item.prompt)} <span class="legend-subtitle">${escapeHtml(item.text)}</span></legend>
           <div class="option-list">
             ${item.options.map((option, optionIndex) => `
-              <label class="choice">
+              <label class="choice ${verified && (state.detective[caseIndex] === optionIndex || optionIndex === item.answer) ? (optionIndex === item.answer ? "is-correct" : "is-wrong") : ""} ${verified && optionIndex === item.answer && state.detective[caseIndex] !== item.answer ? "correct-answer" : ""}">
                 <input type="radio" name="detective-${caseIndex}" value="${optionIndex}" ${state.detective[caseIndex] === optionIndex ? "checked" : ""}>
-                <span class="choice-text">${String.fromCharCode(97 + optionIndex)}) ${escapeHtml(option)}</span>
+                <span class="choice-text">${String.fromCharCode(97 + optionIndex)}) ${escapeHtml(option)}</span>${verified && optionIndex === item.answer ? '<span class="answer-mark" aria-label="răspuns corect">✓</span>' : verified && state.detective[caseIndex] === optionIndex ? '<span class="answer-mark" aria-label="răspuns ales greșit">✕</span>' : ""}
               </label>`).join("")}
           </div>
+          ${verified ? `<div class="answer-explanation ${state.detective[caseIndex] === item.answer ? "good" : "bad"}" role="status">${state.detective[caseIndex] === null || state.detective[caseIndex] === undefined ? `⚠️ Nu ai ales un răspuns. Răspunsul corect este: <strong>${escapeHtml(item.options[item.answer])}</strong>.` : state.detective[caseIndex] === item.answer ? "✅ Corect! Această idee ascunde cea mai mare întrebare." : `❌ Ai ales „${escapeHtml(item.options[state.detective[caseIndex]])}”. Răspunsul corect este: <strong>${escapeHtml(item.options[item.answer])}</strong>.`}</div>` : ""}
         </fieldset>
       </div>`).join("");
     renderFeedback("#detectiveFeedback", state.feedback.detective);
@@ -248,9 +255,11 @@
   }
 
   function checkQuiz() {
+    state.verification.quiz = true;
     const unanswered = state.quiz.filter((answer) => answer === null || answer === undefined).length;
     if (unanswered) {
       state.feedback.quiz = { type: "error", text: `Mai ai ${unanswered} ${unanswered === 1 ? "întrebare" : "întrebări"} fără răspuns.` };
+      renderQuiz();
       renderFeedback("#quizFeedback", state.feedback.quiz);
       saveState();
       return;
@@ -260,22 +269,26 @@
       ? "🎉 Perfect! Ai urmărit fiecare indiciu din poveste."
       : `Ai ${score} din ${quizQuestions.length} răspunsuri corecte. Recitește povestea și mai încearcă!`;
     state.feedback.quiz = { type: score === quizQuestions.length ? "success" : "error", text };
+    renderQuiz();
     renderFeedback("#quizFeedback", state.feedback.quiz);
     saveState();
   }
 
   function checkIdeas() {
+    state.verification.ideas = true;
     const selected = new Set(state.ideas);
     const correct = inspirationChoices.filter((choice) => choice.correct).map((choice) => choice.id);
     const isCorrect = selected.size === correct.length && correct.every((id) => selected.has(id));
     state.feedback.ideas = isCorrect
       ? { type: "success", text: "🎉 Bravo! Ai descoperit că ideile pot apărea aproape oriunde!" }
       : { type: "error", text: "Mai caută: toate sursele de inspirație sunt bune, dar „Doar cărțile” nu este singura posibilitate." };
+    renderIdeas();
     renderFeedback("#ideasFeedback", state.feedback.ideas);
     saveState();
   }
 
   function checkDetective() {
+    state.verification.detective = true;
     const unanswered = state.detective.filter((answer) => answer === null || answer === undefined).length;
     if (unanswered) {
       state.feedback.detective = { type: "error", text: `Alege un răspuns în fiecare situație (${unanswered} lipsesc).` };
@@ -285,6 +298,7 @@
         ? { type: "success", text: "🕵️ Ai ochi de detectiv! O idee bună ne face să vrem să aflăm ce se întâmplă mai departe." }
         : { type: "error", text: `Ai găsit ${score} din ${detectiveCases.length}. Caută propoziția care deschide cea mai mare întrebare.` };
     }
+    renderDetective();
     renderFeedback("#detectiveFeedback", state.feedback.detective);
     saveState();
   }
@@ -307,12 +321,16 @@
       if (!event.target.matches("input[type=radio]")) return;
       const index = Number(event.target.name.replace("quiz-", ""));
       state.quiz[index] = Number(event.target.value);
+      state.verification.quiz = false;
+      state.feedback.quiz = "";
+      renderQuiz();
       saveState();
     });
     $("#quizForm").addEventListener("submit", (event) => { event.preventDefault(); checkQuiz(); });
     $("#resetQuiz").addEventListener("click", () => {
       state.quiz = Array(quizQuestions.length).fill(null);
       state.feedback.quiz = "";
+      state.verification.quiz = false;
       renderQuiz();
       saveState();
     });
@@ -320,15 +338,21 @@
     $("#ideasChoices").addEventListener("change", (event) => {
       if (!event.target.matches("input[type=checkbox]")) return;
       state.ideas = $$("#ideasChoices input:checked").map((input) => input.value);
+      state.verification.ideas = false;
+      state.feedback.ideas = "";
+      renderIdeas();
       saveState();
     });
     $("#checkIdeas").addEventListener("click", checkIdeas);
-    $("#clearIdeas").addEventListener("click", () => { state.ideas = []; state.feedback.ideas = ""; renderIdeas(); saveState(); });
+    $("#clearIdeas").addEventListener("click", () => { state.ideas = []; state.feedback.ideas = ""; state.verification.ideas = false; renderIdeas(); saveState(); });
 
     $("#detectiveList").addEventListener("change", (event) => {
       if (!event.target.matches("input[type=radio]")) return;
       const index = Number(event.target.name.replace("detective-", ""));
       state.detective[index] = Number(event.target.value);
+      state.verification.detective = false;
+      state.feedback.detective = "";
+      renderDetective();
       saveState();
     });
     $("#detectiveForm").addEventListener("submit", (event) => { event.preventDefault(); checkDetective(); });

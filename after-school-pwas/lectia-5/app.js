@@ -75,28 +75,30 @@
   }
   function quiz(id, questions) {
     var old = state.quiz[id] || [];
+    var verified = state.scores[id] != null;
     var h = "<div class=\"question-list\">";
     questions.forEach(function (q, qi) {
       h += "<fieldset class=\"question-card\"><legend>" + (qi + 1) + ". " + q.text + "</legend><div class=\"choice-grid\">";
-      q.options.forEach(function (o, oi) { h += "<label class=\"choice\"><input type=\"radio\" name=\"" + id + "-q" + qi + "\" value=\"" + oi + "\" data-quiz-id=\"" + id + "\" data-q-index=\"" + qi + "\"" + (String(old[qi]) === String(oi) ? " checked" : "") + "><span>" + o + "</span></label>"; });
-      h += "</div></fieldset>";
+      q.options.forEach(function (o, oi) { var picked = String(old[qi]) === String(oi), right = oi === q.answer; var cls = verified && (picked || right) ? (right ? " is-correct" : " is-wrong") : ""; if (verified && right && !picked) cls += " correct-answer"; h += "<label class=\"choice" + cls + "\"><input type=\"radio\" name=\"" + id + "-q" + qi + "\" value=\"" + oi + "\" data-quiz-id=\"" + id + "\" data-q-index=\"" + qi + "\"" + (picked ? " checked" : "") + "><span>" + o + "</span>" + (verified && right ? "<span class=\"answer-mark\">✓</span>" : verified && picked ? "<span class=\"answer-mark\">✕</span>" : "") + "</label>"; });
+      h += verified ? "</div><div class=\"answer-explanation " + (String(old[qi]) === String(q.answer) ? "good\" >✅ Corect!" : "bad\" >❌ Răspunsul corect este: <strong>" + q.options[q.answer] + "</strong>.") + "</div></fieldset>" : "</div></fieldset>";
     });
     h += "</div><div class=\"action-row\"><button class=\"secondary-button\" type=\"button\" data-action=\"quiz\" data-id=\"" + id + "\">Verifică răspunsurile</button>";
     var score = state.scores[id];
     if (score != null) h += "<div class=\"feedback " + (score === questions.length ? "" : "neutral") + "\" role=\"status\">" + (score === questions.length ? "Bravo! Ai găsit ingredientele unei scene interesante. 🌟" : "Bună încercare! Recitește scena și verifică.") + " <span class=\"score\">" + score + "/" + questions.length + "</span></div>";
     return h + "</div>";
   }
-  function chip(group, item, assigned) { return "<button class=\"drag-chip" + (assigned ? " assigned" : "") + "\" type=\"button\" draggable=\"true\" data-drag-group=\"" + group + "\" data-drag-id=\"" + item.id + "\">" + item.label + "</button>"; }
+  function chip(group, item, assigned, verified) { var actual = (state.drags[group] || {})[item.id] || "tray"; var cls = assigned ? " assigned" : ""; if (verified) cls += actual === item.zone ? " is-correct" : " is-wrong"; var expectedLabel = item.zone === "max" ? "Max — curios" : "Lia — precaută"; return "<button class=\"drag-chip" + cls + "\" type=\"button\" draggable=\"true\" data-drag-group=\"" + group + "\" data-drag-id=\"" + item.id + "\">" + item.label + (verified ? (actual === item.zone ? " ✓" : " ✕ · corect: " + expectedLabel) : "") + "</button>"; }
   function board(group, items, zones, instruction) {
     var a = state.drags[group] || {};
+    var verified = Object.prototype.hasOwnProperty.call(state.dragFeedback, group);
     var h = "<p class=\"tip\"><strong>Joacă-te:</strong> " + instruction + " Trage replica sau atinge-o, apoi personajul.</p><div class=\"drag-board\">";
     zones.forEach(function (z) {
       h += "<section class=\"drag-column\" data-drop-group=\"" + group + "\" data-drop-zone=\"" + z.id + "\" data-zone=\"" + z.id + "\" tabindex=\"0\"><h3>" + z.title + "</h3><p class=\"drop-hint\">Atinge aici pentru a o pune.</p><div class=\"drag-tray\">";
-      items.forEach(function (it) { if (a[it.id] === z.id) h += chip(group, it, true); });
+      items.forEach(function (it) { if (a[it.id] === z.id) h += chip(group, it, true, verified); });
       h += "</div></section>";
     });
     h += "<section class=\"drag-column\" data-drop-group=\"" + group + "\" data-drop-zone=\"tray\" data-zone=\"tray\" tabindex=\"0\"><h3>Replici rămase</h3><p class=\"drop-hint\">Mută aici pentru a o elibera.</p><div class=\"drag-tray\">";
-    items.forEach(function (it) { if (!a[it.id] || a[it.id] === "tray") h += chip(group, it, false); });
+    items.forEach(function (it) { if (!a[it.id] || a[it.id] === "tray") h += chip(group, it, false, verified); });
     return h + "</div></section></div>";
   }
   function render(index) {
@@ -189,7 +191,7 @@
   function checkDialog() {
     var a = state.drags["dialog-match"] || {};
     var ok = dialogueItems.every(function (x) { return a[x.id] === x.zone; });
-    state.dragFeedback["dialog-match"] = ok ? "Perfect! Max este curios, iar Lia este atentă și precaută. 🌟" : "Mai încearcă: gândește-te la personalitatea fiecărui personaj.";
+    state.dragFeedback["dialog-match"] = ok ? "Perfect! Max este curios, iar Lia este atentă și precaută. 🌟" : "Roșu = personaj nepotrivit. Răspunsul corect este: A și C → Max; B și D → Lia.";
     save(); render(state.currentStep);
   }
   function dragPayload(s) { var p = String(s || "").split("::"); return p.length === 2 ? { group: p[0], id: p[1] } : null; }

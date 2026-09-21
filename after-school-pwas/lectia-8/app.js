@@ -31,6 +31,7 @@
     connect: [],
     crazy: [],
     crazyText: '',
+    verified: {},
     completed: false
   };
 
@@ -116,7 +117,8 @@
   function quiz() {
     const answered = qData.filter(q => state.answers[q[0]]).length;
     const correct = qData.filter(q => answer(q[0], q[3])).length;
-    return `<section class="content-card"><p class="step-kicker">3 · Înțelegerea poveștii</p><h2>Ce ai observat?</h2><p class="intro">Alege un răspuns la fiecare întrebare. Poți schimba răspunsul oricând.</p><div class="question-grid">${qData.map(([id, text, opts, good], i) => `<fieldset class="question"><legend>Întrebarea ${i + 1}. ${esc(text)}</legend><div class="choice-list">${opts.map(([v, label]) => radio(id, v, esc(label))).join('')}</div>${state.answers[id] ? `<div class="feedback ${answer(id, good) ? 'good' : 'bad'}">${answer(id, good) ? '✅ Bravo! Ai găsit detaliul.' : '💡 Mai citește povestea și încearcă din nou.'}</div>` : ''}</fieldset>`).join('')}</div><div class="feedback ${answered === qData.length && correct === qData.length ? 'good' : ''}">Ai răspuns la ${answered}/${qData.length}. Corecte: ${correct}/${qData.length}.${correct === qData.length ? ' 🎉' : ''}</div></section>`;
+    const verified=!!state.verified.quiz;
+    return `<section class="content-card"><p class="step-kicker">3 · Înțelegerea poveștii</p><h2>Ce ai observat?</h2><p class="intro">Alege un răspuns la fiecare întrebare, apoi apasă „Verifică răspunsurile”.</p><div class="question-grid">${qData.map(([id, text, opts, good], i) => `<fieldset class="question"><legend>Întrebarea ${i + 1}. ${esc(text)}</legend><div class="choice-list">${opts.map(([v,label])=>{const picked=answer(id,v),right=v===good,cls=verified&&(picked||right)?(right?'is-correct':'is-wrong'):'';return `<label class="choice ${cls} ${verified&&right&&!picked?'correct-answer':''}"><input type="radio" name="${esc(id)}" data-choice="${esc(id)}" value="${esc(v)}" ${picked?'checked':''}><span>${esc(label)}</span>${verified&&right?'<span class="answer-mark">✓</span>':verified&&picked?'<span class="answer-mark">✕</span>':''}</label>`;}).join('')}</div>${verified?`<div class="answer-explanation ${answer(id,good)?'good':'bad'}">${answer(id,good)?'✅ Corect!':`❌ Răspunsul corect este: <strong>${esc(opts.find(o=>o[0]===good)?.[1]||'')}</strong>.`}</div>`:''}</fieldset>`).join('')}</div><button class="btn primary" data-action="check-quiz">Verifică răspunsurile</button>${verified?`<div class="feedback ${correct===qData.length?'good':'bad'}">Ai răspuns la ${answered}/${qData.length}. Corecte: ${correct}/${qData.length}. ${correct===qData.length?'🎉':'Răspunsurile corecte sunt verzi, iar cele greșite au explicația.'}</div>`:''}</section>`;
   }
 
   function detective() {
@@ -125,7 +127,8 @@
     const chosen = state.detective || [];
     const hasVisible = visible.some(item => chosen.includes(item));
     const hasImagined = imagined.some(item => chosen.includes(item));
-    return `<section class="content-card"><p class="step-kicker">4 · Privește ca un detectiv</p><h2>Ce vezi și ce îți imaginezi?</h2><p class="intro">În imagine este o pădure cu o casă mică în mijloc. Poți selecta mai multe variante.</p><div class="forest-scene" aria-label="O pădure cu o casă mică în mijloc"></div><h3>👀 Ce vezi?</h3><div class="choice-list">${checkbox('detective','see-trees','Copaci')}${checkbox('detective','see-house','O casă')}${checkbox('detective','see-leaves','Frunze')}${checkbox('detective','see-road','Un drum')}${checkbox('detective','see-sky','Cerul')}${checkbox('detective','see-animal','Un animal')}${checkbox('detective','see-other','Altceva')}</div><h3>💭 Ce crezi că nu se vede, dar ar putea fi acolo?</h3><div class="choice-list">${checkbox('detective','imagine-person','Cineva ascuns în casă')}${checkbox('detective','imagine-object','Un obiect secret')}${checkbox('detective','imagine-animal','Un animal care urmărește personajul')}${checkbox('detective','imagine-room','O cameră ascunsă')}${checkbox('detective','imagine-tunnel','Un tunel sub casă')}${checkbox('detective','imagine-other','Altceva')}</div>${chosen.length ? `<div class="feedback ${hasVisible && hasImagined ? 'good' : 'warn'}">${hasVisible && hasImagined ? '✅ Foarte bine! Un scriitor vede ce este în fața lui și își imaginează și ce ar putea exista dincolo de imagine.' : '💡 Alege cel puțin un lucru văzut și o posibilitate ascunsă.'}</div>` : ''}</section>`;
+    const verified=!!state.verified.detective;
+    return `<section class="content-card"><p class="step-kicker">4 · Privește ca un detectiv</p><h2>Ce vezi și ce îți imaginezi?</h2><p class="intro">În imagine este o pădure cu o casă mică în mijloc. Poți selecta mai multe variante, apoi verifică dacă ai observat ambele tipuri de indicii.</p><div class="forest-scene" aria-label="O pădure cu o casă mică în mijloc"></div><h3>👀 Ce vezi?</h3><div class="choice-list">${checkbox('detective','see-trees','Copaci')}${checkbox('detective','see-house','O casă')}${checkbox('detective','see-leaves','Frunze')}${checkbox('detective','see-road','Un drum')}${checkbox('detective','see-sky','Cerul')}${checkbox('detective','see-animal','Un animal')}${checkbox('detective','see-other','Altceva')}</div><h3>💭 Ce crezi că nu se vede, dar ar putea fi acolo?</h3><div class="choice-list">${checkbox('detective','imagine-person','Cineva ascuns în casă')}${checkbox('detective','imagine-object','Un obiect secret')}${checkbox('detective','imagine-animal','Un animal care urmărește personajul')}${checkbox('detective','imagine-room','O cameră ascunsă')}${checkbox('detective','imagine-tunnel','Un tunel sub casă')}${checkbox('detective','imagine-other','Altceva')}</div><button class="btn primary" data-action="check-detective">Verifică observațiile</button>${verified?`<div class="answer-explanation ${hasVisible&&hasImagined?'good':'bad'}">${hasVisible&&hasImagined?'✅ Foarte bine! Ai notat cel puțin un detaliu vizibil și o posibilitate imaginată.':'💡 Nu există o singură soluție. Pentru verificare, alege cel puțin un lucru văzut și o posibilitate ascunsă.'}</div>`:''}</section>`;
   }
 
   function image1() {
@@ -144,7 +147,8 @@
     const good = ['bag-key', 'key-castle', 'find-after-bag', 'castle-secret', 'all-ideas'];
     const chosen = state.connect || [];
     const ok = chosen.length === good.length && good.every(item => chosen.includes(item));
-    return `<section class="content-card"><p class="step-kicker">8 · Leagă cele trei imagini</p><h2>Construiește legătura</h2><p class="intro">Ghiozdanul, cheia și castelul pot fi unite în mai multe feluri. Toate variantele de mai jos pot deveni idei de poveste.</p><div class="link-flow"><div class="flow-card"><span class="emoji">🎒</span>Ghiozdanul</div><div class="flow-arrow">↓</div><div class="flow-card"><span class="emoji">🗝️</span>Cheia</div><div class="flow-arrow">↓</div><div class="flow-card"><span class="emoji">🏰</span>Castelul</div></div><div class="choice-list">${checkbox('connect','bag-key','Ghiozdanul conține cheia.')}${checkbox('connect','key-castle','Cheia deschide castelul.')}${checkbox('connect','find-after-bag','Personajul găsește cheia după ce descoperă ghiozdanul.')}${checkbox('connect','castle-secret','Castelul ascunde secretul ghiozdanului.')}${checkbox('connect','all-ideas','Toate pot fi idei de poveste.')}</div>${chosen.length ? `<div class="feedback ${ok ? 'good' : 'warn'}">${ok ? '✅ Exact! În scrierea creativă pot exista mai multe variante bune. Important este să poți explica legătura.' : '💡 Toate cele cinci variante pot deveni idei de poveste. Selectează-le pe toate pentru feedbackul complet.'}</div>` : ''}</section>`;
+    const verified=!!state.verified.connect, opts=[['bag-key','Ghiozdanul conține cheia.'],['key-castle','Cheia deschide castelul.'],['find-after-bag','Personajul găsește cheia după ce descoperă ghiozdanul.'],['castle-secret','Castelul ascunde secretul ghiozdanului.'],['all-ideas','Toate pot fi idei de poveste.']];
+    return `<section class="content-card"><p class="step-kicker">8 · Leagă cele trei imagini</p><h2>Construiește legătura</h2><p class="intro">Ghiozdanul, cheia și castelul pot fi unite în mai multe feluri. Toate variantele de mai jos pot deveni idei de poveste; bifează-le și apasă „Verifică legăturile”.</p><div class="link-flow"><div class="flow-card"><span class="emoji">🎒</span>Ghiozdanul</div><div class="flow-arrow">↓</div><div class="flow-card"><span class="emoji">🗝️</span>Cheia</div><div class="flow-arrow">↓</div><div class="flow-card"><span class="emoji">🏰</span>Castelul</div></div><div class="choice-list">${opts.map(([v,l])=>{const picked=chosen.includes(v),cls=verified?(picked?'is-correct':'correct-answer'):'';return `<label class="choice ${cls}"><input type="checkbox" data-multi="connect" value="${v}" ${picked?'checked':''}><span>${l}</span>${verified?'<span class="answer-mark">✓</span>':''}</label>`;}).join('')}</div><button class="btn primary" data-action="check-connect">Verifică legăturile</button>${verified?`<div class="answer-explanation ${ok?'good':'bad'}">${ok?'✅ Exact! Toate cele cinci sunt legături posibile.':'💡 Verde = idei bifate. Toate cele cinci variante pot deveni legături de poveste; bifează-le pe toate pentru feedback complet.'}</div>`:''}</section>`;
   }
 
   function crazy() {
@@ -173,11 +177,11 @@
   }
   function bind() {
     app.querySelectorAll('[data-field]').forEach(el => el.addEventListener('input', event => { setPath(event.target.dataset.field, event.target.value); save(); }));
-    app.querySelectorAll('[data-choice]').forEach(el => el.addEventListener('change', event => { state.answers[event.target.dataset.choice] = event.target.value; save(); render(); }));
+    app.querySelectorAll('[data-choice]').forEach(el => el.addEventListener('change', event => { state.answers[event.target.dataset.choice] = event.target.value; state.verified.quiz=false; save(); render(); }));
     app.querySelectorAll('[data-multi]').forEach(el => el.addEventListener('change', event => {
       const group = event.target.dataset.multi;
       const values = [...app.querySelectorAll(`[data-multi="${CSS.escape(group)}"]:checked`)].map(item => item.value);
-      state[group] = values; save(); render();
+      state[group] = values; if (['detective','connect'].includes(group)) state.verified[group]=false; save(); render();
     }));
     app.querySelectorAll('[data-action]').forEach(el => el.addEventListener('click', event => {
       const action = event.currentTarget.dataset.action;
@@ -185,6 +189,9 @@
       if (action === 'prev') go(state.current - 1);
       if (action === 'reset' && window.confirm('Ștergi progresul acestei lecții de pe tabletă?')) { state = clone(defaultState); save(); go(0, true); }
       if (action === 'finish') { state.completed = true; save(); render(); }
+      if (action === 'check-quiz') { state.verified.quiz=true; save(); render(); }
+      if (action === 'check-detective') { state.verified.detective=true; save(); render(); }
+      if (action === 'check-connect') { state.verified.connect=true; save(); render(); }
     }));
   }
 
